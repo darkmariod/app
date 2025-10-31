@@ -2,16 +2,17 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from gc_service import GoogleService
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
+import os
 
 # =========================
 # CONFIGURACIÓN BASE
 # =========================
 app = Flask(__name__)
-app.secret_key = "supersecretkey"  # para usar mensajes flash
+app.secret_key = os.getenv("FLASK_SECRET", "supersecretkey")
 
 TZ = ZoneInfo("America/Guayaquil")
 GC = GoogleService()
-CALENDAR_ID = "mariodanielq.p@gmail.com"
+CALENDAR_ID = os.getenv("CALENDAR_ID", "mariodanielq.p@gmail.com")
 
 # =========================
 # DATOS SIMULADOS
@@ -50,7 +51,6 @@ SERVICIOS = [
 # =========================
 # RUTAS
 # =========================
-
 @app.route("/")
 def sede():
     return render_template("sede.html", sedes=SEDES)
@@ -87,9 +87,13 @@ def confirmacion():
     foto_sede = SEDES[sede]["foto"] if sede in SEDES else ""
     foto_barbero = next((b["foto"] for b in BARBEROS if b["nombre"] == barbero), "")
 
-    # 🕒 Obtener horas libres de hoy desde Google Calendar
+    # 🕒 Obtener horas libres desde Google Calendar
     fecha_actual = datetime.now(TZ)
-    horas_disponibles = GC.generar_slots_libres(CALENDAR_ID, fecha_actual, duracion)
+    try:
+        horas_disponibles = GC.generar_slots_libres(CALENDAR_ID, fecha_actual, duracion)
+    except Exception as e:
+        print("❌ Error obteniendo horas:", e)
+        horas_disponibles = []
 
     return render_template(
         "confirmacion.html",
@@ -100,7 +104,7 @@ def confirmacion():
         duracion=duracion,
         foto_sede=foto_sede,
         foto_barbero=foto_barbero,
-        horas=horas_disponibles
+        horas=horas_disponibles,
     )
 
 
@@ -137,4 +141,4 @@ def guardar_cita():
 # MAIN
 # =========================
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000)
