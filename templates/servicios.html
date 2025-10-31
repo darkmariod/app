@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Selecciona un Servicio</h2>
+
+<div class="cards-grid">
+  {% for s in servicios %}
+  <form action="{{ url_for('barberos') }}" method="POST" class="card">
+    <h3>{{ s.nombre }}</h3>
+    <p>💰 ${{ s.precio }} | ⏱ {{ s.duracion }} min</p>
+    <input type="hidden" name="sede" value="{{ sede }}">
+    <input type="hidden" name="servicio" value="{{ s.nombre }}">
+    <button type="submit" class="btn">Elegir {{ s.nombre }}</button>
+  </form>
+  {% endfor %}
+</div>
+
+<div class="nav-buttons">
+  <a href="{{ url_for('sede') }}" class="btn secondary">Volver</a>
+</div>
+
+{% endblock %}

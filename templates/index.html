@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Selecciona una Sede</h2>
+
+<div class="grid">
+  {% for sede, data in sedes.items() %}
+  <div class="card">
+    <img src="{{ url_for('static', filename='assets/' + data.foto) }}" class="sede-img">
+    <h3>{{ sede }}</h3>
+    <a href="{{ data.map_url }}" target="_blank">📍 Ver en Google Maps</a>
+    <a href="{{ url_for('barberos', sede=sede) }}" class="btn">Ver Barberos</a>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

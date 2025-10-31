@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Agendar cita - {{ barbero }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+  <div class="header fade">
+    <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="logo" class="logo">
+    <h1 class="title">Agendar con {{ barbero }}</h1>
+  </div>
+
+  <form method="POST">
+    <label>Selecciona fecha:</label>
+    <input type="date" name="fecha" required>
+    <button type="submit">Ver horas disponibles</button>
+  </form>
+
+  {% if horas %}
+  <form method="POST" action="{{ url_for('confirmar') }}">
+    <input type="hidden" name="sede" value="{{ sede }}">
+    <input type="hidden" name="barbero" value="{{ barbero }}">
+    <input type="hidden" name="servicio" value="{{ servicio }}">
+    <input type="hidden" name="fecha" value="{{ fecha }}">
+
+    <h3>Horas disponibles el {{ fecha }}</h3>
+    {% for h in horas %}
+      <label><input type="radio" name="hora" value="{{ h }}" required> {{ h }}</label><br>
+    {% endfor %}
+
+    <h4>Tus datos</h4>
+    <input name="nombre" placeholder="Tu nombre" required>
+    <input name="telefono" placeholder="Teléfono" required>
+    <input name="email" type="email" placeholder="Correo" required>
+
+    <button type="submit">Confirmar cita</button>
+  </form>
+  {% endif %}
+</body>
+</html>

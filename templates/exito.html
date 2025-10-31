@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block steps %}
+<div class="steps">
+  <span class="step">1 Sede</span>
+  <span class="step">2 Servicio</span>
+  <span class="step">3 Barbero</span>
+  <span class="step active">✅ Listo</span>
+</div>
+{% endblock %}
+{% block content %}
+<h2>¡Cita confirmada!</h2>
+<p><b>Sede:</b> {{ sede }}</p>
+<p><b>Servicio:</b> {{ servicio }}</p>
+<p><b>Barbero:</b> {{ barbero }}</p>
+<p><b>Fecha:</b> {{ fecha }} — <b>Hora:</b> {{ hora }}</p>
+<div class="nav-buttons">
+  <a class="btn" href="{{ url_for('sede') }}">Volver al inicio</a>
+</div>
+{% endblock %}

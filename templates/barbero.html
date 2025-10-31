@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Selecciona tu Barbero</h2>
+
+<div class="cards-grid">
+  {% for b in barberos %}
+  <form action="{{ url_for('confirmacion') }}" method="POST" class="barber-card">
+    <img src="{{ url_for('static', filename=b.foto.split('static/')[-1]) }}" alt="{{ b.nombre }}">
+    <h3>{{ b.nombre }}</h3>
+    <input type="hidden" name="sede" value="{{ sede }}">
+    <input type="hidden" name="servicio" value="{{ servicio }}">
+    <input type="hidden" name="barbero" value="{{ b.nombre }}">
+    <button type="submit" class="btn">Elegir {{ b.nombre }}</button>
+  </form>
+  {% endfor %}
+</div>
+
+<div class="nav-buttons">
+  <form action="{{ url_for('servicios') }}" method="POST">
+    <input type="hidden" name="sede" value="{{ sede }}">
+    <button type="submit" class="btn secondary">Volver</button>
+  </form>
+  <a href="{{ url_for('sede') }}" class="btn secondary">Inicio</a>
+</div>
+
+{% endblock %}

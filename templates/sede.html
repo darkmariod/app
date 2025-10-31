@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Selecciona una Sede</h2>
+
+<div class="cards-grid">
+  {% for nombre, sede_info in sedes.items() %}
+  <form action="{{ url_for('servicios') }}" method="POST" class="card">
+    <img src="{{ url_for('static', filename=sede_info.foto.split('static/')[-1]) }}" alt="{{ nombre }}">
+    <h3>{{ nombre }}</h3>
+    <a href="{{ sede_info.map_url }}" class="map-link" target="_blank">Ver en Google Maps</a>
+
+    <input type="hidden" name="sede" value="{{ nombre }}">
+    <button type="submit" class="btn">Elegir {{ nombre }}</button>
+  </form>
+  {% endfor %}
+</div>
+
+{% endblock %}
