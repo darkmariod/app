@@ -11,19 +11,20 @@ class GoogleService:
         creds = None
         last_error = None
 
-        # Intentar con variable de entorno Base64 (Render)
+        # 🔹 Intentar con variable Base64 (Render)
         b64_env = os.getenv("GOOGLE_CREDENTIALS_B64")
 
         if b64_env:
             try:
-                info = json.loads(base64.b64decode(b64_env))
+                decoded = base64.b64decode(b64_env)
+                info = json.loads(decoded)
                 creds = service_account.Credentials.from_service_account_info(
                     info, scopes=["https://www.googleapis.com/auth/calendar"]
                 )
             except Exception as e:
                 last_error = f"Error al decodificar GOOGLE_CREDENTIALS_B64 → {e}"
 
-        # En local: usar credentials.json
+        # 🔹 En local: usar credentials.json
         elif os.path.exists("credentials.json"):
             try:
                 creds = service_account.Credentials.from_service_account_file(
@@ -36,19 +37,19 @@ class GoogleService:
         if not creds:
             raise RuntimeError(f"No se pudieron cargar las credenciales. {last_error}")
 
-        self.service = build("calendar", "v3", credentials=creds)
+        # 🔹 Inicializar cliente de Calendar
+        self.service = build("calendar", "v3", credentials=creds, cache_discovery=False)
 
     # =========================================================
-    # 🔹 Horas disponibles
+    # 🔹 Obtener horas libres de un día
     # =========================================================
     def get_free_slots(self, calendar_id: str, date: str, duration_minutes: int = 45):
         try:
-            service = self.service
-
             date_start = datetime.strptime(date, "%Y-%m-%d").replace(tzinfo=TZ)
             date_end = date_start + timedelta(days=1)
 
-            events_result = service.events().list(
+            # 📅 Obtener eventos existentes
+            events_result = self.service.events().list(
                 calendarId=calendar_id,
                 timeMin=date_start.isoformat(),
                 timeMax=date_end.isoformat(),
@@ -65,7 +66,7 @@ class GoogleService:
                 if start and end:
                     busy_slots.append((start, end))
 
-            # Horario de barbería
+            # 🕘 Horario de barbería
             open_hour = 9
             close_hour = 20
             slots = []
@@ -84,8 +85,26 @@ class GoogleService:
                     slots.append(start_time.strftime("%H:%M"))
                 start_time = end_time
 
+            print(f"✅ {date}: {len(slots)} horas disponibles ({len(events)} eventos encontrados)")
             return slots
 
         except Exception as e:
             print("❌ Error generando slots:", e)
             return []
+
+    # =========================================================
+    # 🔹 Crear evento (cita)
+    # =========================================================
+    def crear_evento(self, calendar_id, resumen, descripcion, inicio, fin, zona="America/Guayaquil"):
+        try:
+            evento = {
+                "summary": resumen,
+                "description": descripcion,
+                "start": {"dateTime": inicio.isoformat(), "timeZone": zona},
+                "end": {"dateTime": fin.isoformat(), "timeZone": zona},
+            }
+            self.service.events().insert(calendarId=calendar_id, body=evento).execute()
+            print(f"✅ Evento creado: {resumen}")
+        except Exception as e:
+            print("❌ Error creando evento:", e)
+            raise
