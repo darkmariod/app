@@ -1,27 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
-
-<h2>Selecciona tu Barbero</h2>
-
+<div class="steps"><div class="step">Servicio</div><div class="step active">Barbero</div></div>
+<h2>2. ¿Quién te atenderá?</h2>
 <div class="cards-grid">
-  {% for b in barberos %}
-  <form action="{{ url_for('confirmacion') }}" method="POST" class="barber-card">
-    <img src="{{ url_for('static', filename=b.foto.split('static/')[-1]) }}" alt="{{ b.nombre }}">
-    <h3>{{ b.nombre }}</h3>
-    <input type="hidden" name="sede" value="{{ sede }}">
-    <input type="hidden" name="servicio" value="{{ servicio }}">
-    <input type="hidden" name="barbero" value="{{ b.nombre }}">
-    <button type="submit" class="btn">Elegir {{ b.nombre }}</button>
-  </form>
-  {% endfor %}
+    {% for barbero in barberos %}
+    <div class="barber-card">
+        <img src="{{ url_for('static', filename=barbero.foto) if barbero.foto else url_for('static', filename='img/banner.jpg') }}">
+        <h3>{{ barbero.nombre }}</h3>
+        <form action="/confirmacion" method="POST">
+            <input type="hidden" name="sede" value="{{ sede }}">
+            <input type="hidden" name="servicio" value="{{ servicio }}">
+            <input type="hidden" name="barbero" value="{{ barbero.nombre }}">
+            <button type="submit" class="btn">Seleccionar</button>
+        </form>
+    </div>
+    {% endfor %}
 </div>
-
-<div class="nav-buttons">
-  <form action="{{ url_for('servicios') }}" method="POST">
-    <input type="hidden" name="sede" value="{{ sede }}">
-    <button type="submit" class="btn secondary">Volver</button>
-  </form>
-  <a href="{{ url_for('sede') }}" class="btn secondary">Inicio</a>
-</div>
-
 {% endblock %}

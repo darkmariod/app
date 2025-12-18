@@ -1,22 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
-
-<h2>Selecciona un Servicio</h2>
-
+<div class="sede-foto">
+    <img src="{{ url_for('static', filename='img/banner.jpg') }}">
+    <div class="sede-overlay"><h3>{{ sede }}</h3></div>
+</div>
+<h2>1. Selecciona un Servicio</h2>
 <div class="cards-grid">
-  {% for s in servicios %}
-  <form action="{{ url_for('barberos') }}" method="POST" class="card">
-    <h3>{{ s.nombre }}</h3>
-    <p>💰 ${{ s.precio }} | ⏱ {{ s.duracion }} min</p>
-    <input type="hidden" name="sede" value="{{ sede }}">
-    <input type="hidden" name="servicio" value="{{ s.nombre }}">
-    <button type="submit" class="btn">Elegir {{ s.nombre }}</button>
-  </form>
-  {% endfor %}
+    {% for servicio in servicios %}
+    <div class="card">
+        <div style="padding: 1rem;">
+            <h3>{{ servicio.nombre }}</h3>
+            <p>{{ servicio.duracion }} min</p>
+            <div class="price"><strong>${{ servicio.precio }}</strong></div>
+        </div>
+        <form action="/barberos" method="POST">
+            <input type="hidden" name="sede" value="{{ sede }}">
+            <input type="hidden" name="servicio" value="{{ servicio.nombre }}">
+            <button type="submit" class="btn">Siguiente</button>
+        </form>
+    </div>
+    {% endfor %}
 </div>
-
-<div class="nav-buttons">
-  <a href="{{ url_for('sede') }}" class="btn secondary">Volver</a>
-</div>
-
 {% endblock %}
