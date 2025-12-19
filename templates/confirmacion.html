@@ -1,35 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="confirm-container">
-    <div class="summary">
-        <h3>Resumen</h3>
-        <p><strong>{{ servicio }}</strong> con <strong>{{ barbero }}</strong></p>
-        <p class="price">${{ precio }}</p>
-    </div>
-    <div class="checkout">
-        <form action="/exito" method="POST" class="confirm-form">
-            <input type="hidden" name="servicio" value="{{ servicio }}">
-            <input type="hidden" name="barbero" value="{{ barbero }}">
-            <label>Fecha:</label>
-            <input type="date" name="fecha" required>
-            <label>Hora:</label>
-            <select name="hora">
-                <option>09:00 AM</option>
-                <option>10:00 AM</option>
-                <option>10:00 AM</option>
-                <option>11:00 AM</option>
-                <option>12:00 AM</option>
-                <option>13:00 AM</option>
-                <option>14:00 AM</option>
-                <option>15:00 AM</option>
-                <option>16:00 AM</option>
-                <option>17:00 AM</option>
-                <option>18:00 AM</option>
-                <option>19:00 AM</option>
-                <option>20:00 AM</option>
-            </select>
-            <button type="submit" class="btn" style="width:100%">Confirmar Cita</button>
-        </form>
-    </div>
+<div class="steps">
+    <span class="step">Servicio</span>
+    <span class="step">Barbero</span>
+    <span class="step active">Cita</span>
+</div>
+<div style="text-align:center;">
+    <p style="color:var(--text-muted); font-size: 0.9rem;">Has elegido:</p>
+    <h2 style="margin: 10px 0;">{{ servicio }}</h2>
+    <p>Con <strong>{{ barbero }}</strong></p>
+    <h1 style="color:var(--primary); margin: 20px 0;">${{ precio }}</h1>
+    
+    <input type="date" style="width:100%; padding:12px; border-radius:12px; border:1px solid var(--border); margin-bottom:10px;">
+    <button class="btn" style="padding:15px; font-size:1rem;">CONFIRMAR CITA</button>
 </div>
 {% endblock %}

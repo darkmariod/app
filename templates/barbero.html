@@ -1,19 +1,37 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="steps"><div class="step">Servicio</div><div class="step active">Barbero</div></div>
-<h2>2. ¿Quién te atenderá?</h2>
-<div class="cards-grid">
-    {% for barbero in barberos %}
-    <div class="barber-card">
-        <img src="{{ url_for('static', filename=barbero.foto) if barbero.foto else url_for('static', filename='img/banner.jpg') }}">
-        <h3>{{ barbero.nombre }}</h3>
-        <form action="/confirmacion" method="POST">
-            <input type="hidden" name="sede" value="{{ sede }}">
-            <input type="hidden" name="servicio" value="{{ servicio }}">
-            <input type="hidden" name="barbero" value="{{ barbero.nombre }}">
-            <button type="submit" class="btn">Seleccionar</button>
-        </form>
+<header>
+    <p class="option-subtitle">{{ servicio }}</p>
+    <h1>Select Staff</h1>
+</header>
+
+<form action="/confirmacion" method="POST">
+    <input type="hidden" name="servicio" value="{{ servicio }}">
+    
+    <div class="options-container">
+        <label class="option-item">
+            <div style="background: #e8e1d5; width: 48px; height: 48px; border-radius: 50%; margin-right: 16px; display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 20px;">👤</span>
+            </div>
+            <div class="option-details">
+                <div class="option-title">Any staff</div>
+            </div>
+            <input type="radio" name="barbero" value="Cualquiera" checked>
+        </label>
+
+        {% for b in barberos %}
+        <label class="option-item">
+            <div class="staff-avatar" style="background-image: url('/static/img/{{ b.nombre.lower() }}.jpg'); background-size: cover;"></div>
+            <div class="option-details">
+                <div class="option-title">{{ b.nombre }}</div>
+            </div>
+            <input type="radio" name="barbero" value="{{ b.nombre }}">
+        </label>
+        {% endfor %}
     </div>
-    {% endfor %}
-</div>
+
+    <div class="fixed-footer">
+        <button type="submit" class="btn-add">Continue</button>
+    </div>
+</form>
 {% endblock %}

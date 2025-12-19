@@ -1,15 +1,27 @@
-{% extends "layout.html" %}
+{% extends "base.html" %}
 {% block content %}
-<h2>Selecciona una Sede</h2>
+<header>
+    <p class="option-subtitle">All services</p>
+    <h1>Mens Cut</h1>
+</header>
 
-<div class="grid">
-  {% for sede, data in sedes.items() %}
-  <div class="card">
-    <img src="{{ url_for('static', filename='assets/' + data.foto) }}" class="sede-img">
-    <h3>{{ sede }}</h3>
-    <a href="{{ data.map_url }}" target="_blank">📍 Ver en Google Maps</a>
-    <a href="{{ url_for('barberos', sede=sede) }}" class="btn">Ver Barberos</a>
-  </div>
-  {% endfor %}
-</div>
+<form action="/barberos" method="POST" id="booking-form">
+    <div class="options-container">
+        <p style="margin-bottom: 15px; font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Options</p>
+        
+        {% for s in servicios %}
+        <label class="option-item">
+            <div class="option-details">
+                <div class="option-title">{{ s.nombre }}</div>
+                <div class="option-subtitle">${{ s.precio }} • {{ s.duracion }} min</div>
+            </div>
+            <input type="radio" name="servicio" value="{{ s.nombre }}" required>
+        </label>
+        {% endfor %}
+    </div>
+
+    <div class="fixed-footer">
+        <button type="submit" class="btn-add">Add</button>
+    </div>
+</form>
 {% endblock %}

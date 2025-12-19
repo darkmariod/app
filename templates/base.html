@@ -2,18 +2,12 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Barbería Seven</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Seven Barbería</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <main>
-        <div class="header">
-            <img src="{{ url_for('static', filename='img/banner.jpg') }}" class="logo">
-            <div class="header-text">
-                <h1>Barbería Seven</h1>
-                <p>Reserva tu cita al instante</p>
-            </div>
-        </div>
+    <main class="fade-in">
         {% block content %}{% endblock %}
     </main>
 </body>
